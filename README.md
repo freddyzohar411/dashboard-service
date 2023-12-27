@@ -1,1 +1,1 @@
-# job-service
+# dashboard-service
