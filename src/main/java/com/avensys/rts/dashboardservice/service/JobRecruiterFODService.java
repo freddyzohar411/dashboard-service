@@ -1,6 +1,5 @@
 package com.avensys.rts.dashboardservice.service;
 
-import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,18 +19,122 @@ public class JobRecruiterFODService {
 	private JobRecruiterFODRepository jobRecruiterFODRepository;
 
 	/**
-	 * @description Get Job counts for dashboard
-	 * @param userId
+	 * New Jobs count
+	 * 
 	 * @return
 	 * @throws ServiceException
 	 */
-	public Map<?, ?> getJobFOD(Long userId) throws ServiceException {
-		Optional<Map<?, ?>> entityOptional = jobRecruiterFODRepository.getJobCounts(userId);
+	public Integer getNewJobsCount() throws ServiceException {
+		Optional<Integer> entityOptional = jobRecruiterFODRepository.getNewJobsCount();
 		try {
 			if (entityOptional.isPresent()) {
 				return entityOptional.get();
 			} else {
-				return null;
+				return 0;
+			}
+		} catch (Exception e) {
+			throw new ServiceException(e.getLocalizedMessage());
+		}
+	}
+
+	public Integer getActiveJobsCount() throws ServiceException {
+		Optional<Integer> entityOptional = jobRecruiterFODRepository.getActiveJobsCount();
+		try {
+			if (entityOptional.isPresent()) {
+				return entityOptional.get();
+			} else {
+				return 0;
+			}
+		} catch (Exception e) {
+			throw new ServiceException(e.getLocalizedMessage());
+		}
+	}
+
+	public Integer getInactiveJobsCount() throws ServiceException {
+		Optional<Integer> entityOptional = jobRecruiterFODRepository.getInactiveJobsCount();
+		try {
+			if (entityOptional.isPresent()) {
+				return entityOptional.get();
+			} else {
+				return 0;
+			}
+		} catch (Exception e) {
+			throw new ServiceException(e.getLocalizedMessage());
+		}
+	}
+
+	public Integer getClosedJobsCount() throws ServiceException {
+		Optional<Integer> entityOptional = jobRecruiterFODRepository.getClosedJobsCount();
+		try {
+			if (entityOptional.isPresent()) {
+				return entityOptional.get();
+			} else {
+				return 0;
+			}
+		} catch (Exception e) {
+			throw new ServiceException(e.getLocalizedMessage());
+		}
+	}
+
+	public Integer getAssignedJobsCount(Long userId) throws ServiceException {
+		Optional<Integer> entityOptional = jobRecruiterFODRepository.getAssignedJobsCount(userId);
+		try {
+			if (entityOptional.isPresent()) {
+				return entityOptional.get();
+			} else {
+				return 0;
+			}
+		} catch (Exception e) {
+			throw new ServiceException(e.getLocalizedMessage());
+		}
+	}
+
+	public Integer getFODCount(Long userId) throws ServiceException {
+		Optional<Integer> entityOptional = jobRecruiterFODRepository.getFODCount(userId);
+		try {
+			if (entityOptional.isPresent()) {
+				return entityOptional.get();
+			} else {
+				return 0;
+			}
+		} catch (Exception e) {
+			throw new ServiceException(e.getLocalizedMessage());
+		}
+	}
+
+	public Integer getAllJobsCount() throws ServiceException {
+		Optional<Integer> entityOptional = jobRecruiterFODRepository.getAllJobsCount();
+		try {
+			if (entityOptional.isPresent()) {
+				return entityOptional.get();
+			} else {
+				return 0;
+			}
+		} catch (Exception e) {
+			throw new ServiceException(e.getLocalizedMessage());
+		}
+	}
+
+	public Integer getTotalAssignedJobsCount() throws ServiceException {
+		Optional<Integer> entityOptional = jobRecruiterFODRepository.getTotalAssignedJobsCount();
+		try {
+			if (entityOptional.isPresent()) {
+				return entityOptional.get();
+			} else {
+				return 0;
+			}
+		} catch (Exception e) {
+			throw new ServiceException(e.getLocalizedMessage());
+		}
+	}
+
+	public Integer getTotalFODJobsCount() throws ServiceException {
+		Optional<Integer> entityOptional = jobRecruiterFODRepository.getTotalFODJobsCount();
+		try {
+			if (entityOptional.isPresent()) {
+				return entityOptional.get();
+			} else {
+				return 0;
 			}
 		} catch (Exception e) {
 			throw new ServiceException(e.getLocalizedMessage());
