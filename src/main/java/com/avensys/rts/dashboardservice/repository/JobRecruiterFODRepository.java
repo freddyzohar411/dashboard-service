@@ -9,7 +9,7 @@ import com.avensys.rts.dashboardservice.entity.JobRecruiterFODEntity;
 
 public interface JobRecruiterFODRepository extends JpaRepository<JobRecruiterFODEntity, Long> {
 
-	@Query(value = "select count(id) from job where id not in (select fod.job_id from job_recruiter_fod fod)", nativeQuery = true)
+	@Query(value = "select count(id) from job where id not in (select fod.job_id from job_recruiter_fod fod) and is_active = true and is_deleted  = false", nativeQuery = true)
 	Optional<Integer> getNewJobsCount();
 
 	@Query(value = "select count(id) from job where is_active = true and is_deleted  = false", nativeQuery = true)
