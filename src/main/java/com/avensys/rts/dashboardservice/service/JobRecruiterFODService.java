@@ -1,5 +1,7 @@
 package com.avensys.rts.dashboardservice.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,7 @@ public class JobRecruiterFODService {
 	@Autowired
 	private JobRecruiterFODRepository jobRecruiterFODRepository;
 
+
 	/**
 	 * New Jobs count
 	 * 
@@ -25,6 +28,10 @@ public class JobRecruiterFODService {
 	 * @throws ServiceException
 	 */
 	public Integer getNewJobsCount() throws ServiceException {
+		List<Long> userIds = new ArrayList<>();
+//		if (!isGetAll) {
+//			userIds = userUtil.getUsersIdUnderManager();
+//		}
 		Optional<Integer> entityOptional = jobRecruiterFODRepository.getNewJobsCount();
 		try {
 			if (entityOptional.isPresent()) {
