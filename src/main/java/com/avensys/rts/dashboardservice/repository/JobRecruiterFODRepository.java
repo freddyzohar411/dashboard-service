@@ -1,5 +1,6 @@
 package com.avensys.rts.dashboardservice.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,8 +10,12 @@ import com.avensys.rts.dashboardservice.entity.JobRecruiterFODEntity;
 
 public interface JobRecruiterFODRepository extends JpaRepository<JobRecruiterFODEntity, Long> {
 
-	@Query(value = "select count(id) from job where id not in (select distinct(fod.job_id) from job_recruiter_fod fod) and is_active = true and is_deleted  = false", nativeQuery = true)
-	Optional<Integer> getNewJobsCount();
+//	@Query(value = "select count(id) from job where id not in (select distinct(fod.job_id) from job_recruiter_fod fod) and is_active = true and is_deleted  = false", nativeQuery = true)
+//	Optional<Integer> getNewJobsCount();
+
+	// Add filter only in list of user Id
+	@Query(value = "select count(id) from job where id not in (select distinct(fod.job_id) from job_recruiter_fod fod) and is_active = true and is_deleted = false and created_by IN :userIds", nativeQuery = true)
+	Optional<Integer> getNewJobsCount(List<Long> userIds);
 
 	@Query(value = "select count(id) from job where id in (select distinct(fod.job_id) from job_recruiter_fod fod) and is_active = true and is_deleted  = false", nativeQuery = true)
 	Optional<Integer> getActiveJobsCount();

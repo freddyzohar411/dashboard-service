@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.avensys.rts.dashboardservice.util.UserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,8 @@ public class JobRecruiterFODService {
 	@Autowired
 	private JobRecruiterFODRepository jobRecruiterFODRepository;
 
+	@Autowired
+	private UserUtil userUtil;
 
 	/**
 	 * New Jobs count
@@ -30,9 +33,11 @@ public class JobRecruiterFODService {
 	public Integer getNewJobsCount() throws ServiceException {
 		List<Long> userIds = new ArrayList<>();
 //		if (!isGetAll) {
-//			userIds = userUtil.getUsersIdUnderManager();
+			userIds = userUtil.getUsersIdUnderManager();
 //		}
-		Optional<Integer> entityOptional = jobRecruiterFODRepository.getNewJobsCount();
+		System.out.println("userIds: " + userIds);
+//		Optional<Integer> entityOptional = jobRecruiterFODRepository.getNewJobsCount();
+		Optional<Integer> entityOptional = jobRecruiterFODRepository.getNewJobsCount(userIds);
 		try {
 			if (entityOptional.isPresent()) {
 				return entityOptional.get();
