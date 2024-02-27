@@ -35,7 +35,6 @@ public class JobRecruiterFODService {
 //		if (!isGetAll) {
 			userIds = userUtil.getUsersIdUnderManager();
 //		}
-		System.out.println("userIds: " + userIds);
 //		Optional<Integer> entityOptional = jobRecruiterFODRepository.getNewJobsCount();
 		Optional<Integer> entityOptional = jobRecruiterFODRepository.getNewJobsCount(userIds);
 		try {
@@ -50,7 +49,11 @@ public class JobRecruiterFODService {
 	}
 
 	public Integer getActiveJobsCount() throws ServiceException {
-		Optional<Integer> entityOptional = jobRecruiterFODRepository.getActiveJobsCount();
+		List<Long> userIds = new ArrayList<>();
+		//		if (!isGetAll) {
+		userIds = userUtil.getUsersIdUnderManager();
+		//		}
+		Optional<Integer> entityOptional = jobRecruiterFODRepository.getActiveJobsCount(userIds);
 		try {
 			if (entityOptional.isPresent()) {
 				return entityOptional.get();
