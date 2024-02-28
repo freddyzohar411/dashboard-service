@@ -30,13 +30,19 @@ public class JobRecruiterFODService {
 	 * @return
 	 * @throws ServiceException
 	 */
-	public Integer getNewJobsCount() throws ServiceException {
+	public Integer getNewJobsCount(Boolean isGetAll) throws ServiceException {
 		List<Long> userIds = new ArrayList<>();
 //		if (!isGetAll) {
-			userIds = userUtil.getUsersIdUnderManager();
+		userIds = userUtil.getUsersIdUnderManager();
 //		}
 //		Optional<Integer> entityOptional = jobRecruiterFODRepository.getNewJobsCount();
-		Optional<Integer> entityOptional = jobRecruiterFODRepository.getNewJobsCount(userIds);
+		Optional<Integer> entityOptional = Optional.empty();
+		if (isGetAll) {
+			entityOptional = jobRecruiterFODRepository.getNewJobsCountAll();
+		} else {
+			entityOptional = jobRecruiterFODRepository.getNewJobsCount(userIds);
+		}
+//		Optional<Integer> entityOptional = jobRecruiterFODRepository.getNewJobsCount(userIds);
 		try {
 			if (entityOptional.isPresent()) {
 				return entityOptional.get();
@@ -48,12 +54,17 @@ public class JobRecruiterFODService {
 		}
 	}
 
-	public Integer getActiveJobsCount() throws ServiceException {
+	public Integer getActiveJobsCount(Boolean isGetAll) throws ServiceException {
 		List<Long> userIds = new ArrayList<>();
-		//		if (!isGetAll) {
+		// if (!isGetAll) {
 		userIds = userUtil.getUsersIdUnderManager();
-		//		}
-		Optional<Integer> entityOptional = jobRecruiterFODRepository.getActiveJobsCount(userIds);
+		// }
+		Optional<Integer> entityOptional = Optional.empty();
+		if (isGetAll) {
+			entityOptional = jobRecruiterFODRepository.getActiveJobsCountAll();
+		} else {
+			entityOptional = jobRecruiterFODRepository.getActiveJobsCount(userIds);
+		}
 		try {
 			if (entityOptional.isPresent()) {
 				return entityOptional.get();
@@ -93,9 +104,9 @@ public class JobRecruiterFODService {
 
 	public Integer getAssignedJobsCount(Long userId) throws ServiceException {
 		List<Long> userIds = new ArrayList<>();
-		//		if (!isGetAll) {
+		// if (!isGetAll) {
 		userIds = userUtil.getUsersIdUnderManager();
-		//		}
+		// }
 		Optional<Integer> entityOptional = jobRecruiterFODRepository.getAssignedJobsCount(userIds);
 //		Optional<Integer> entityOptional = jobRecruiterFODRepository.getAssignedJobsCount(userId);
 		try {
@@ -109,14 +120,18 @@ public class JobRecruiterFODService {
 		}
 	}
 
-	public Integer getFODCount(Long userId) throws ServiceException {
+	public Integer getFODCount(Long userId, Boolean isGetAll) throws ServiceException {
 		List<Long> userIds = new ArrayList<>();
-		//		if (!isGetAll) {
+		// if (!isGetAll) {
 		userIds = userUtil.getUsersIdUnderManager();
-		//		}
+		// }
 //		Optional<Integer> entityOptional = jobRecruiterFODRepository.getFODCount(userId);
-		Optional<Integer> entityOptional = jobRecruiterFODRepository.getFODCount(userIds);
-
+		Optional<Integer> entityOptional = Optional.empty();
+		if (isGetAll) {
+			entityOptional = jobRecruiterFODRepository.getFODCountAll();
+		} else {
+			entityOptional = jobRecruiterFODRepository.getFODCount(userIds);
+		}
 		try {
 			if (entityOptional.isPresent()) {
 				return entityOptional.get();
