@@ -29,8 +29,11 @@ public interface JobRecruiterFODRepository extends JpaRepository<JobRecruiterFOD
 	@Query(value = "select count(distinct(job_id)) from job_recruiter_fod where status != 'CLOSED' and (recruiter_id = ?1 or sales_id = ?1)", nativeQuery = true)
 	Optional<Integer> getAssignedJobsCount(Long userId);
 
-	@Query(value = "select count(distinct(job_id)) from job_recruiter_fod where recruiter_id = ?1 or sales_id = ?1 and created_at >= current_date", nativeQuery = true)
-	Optional<Integer> getFODCount(Long userId);
+//	@Query(value = "select count(distinct(job_id)) from job_recruiter_fod where recruiter_id = ?1 or sales_id = ?1 and created_at >= current_date", nativeQuery = true)
+//	Optional<Integer> getFODCount(Long userId);
+
+	@Query(value = "select count(distinct(job_id)) from job_recruiter_fod where recruiter_id IN :userIds or sales_id IN :userIds and created_at >= current_date", nativeQuery = true)
+	Optional<Integer> getFODCount(List<Long> userIds);
 
 	@Query(value = "select count(id) from job where is_deleted  = false", nativeQuery = true)
 	Optional<Integer> getAllJobsCount();
