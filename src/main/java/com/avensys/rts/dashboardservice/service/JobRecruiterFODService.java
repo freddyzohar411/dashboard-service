@@ -92,7 +92,12 @@ public class JobRecruiterFODService {
 	}
 
 	public Integer getAssignedJobsCount(Long userId) throws ServiceException {
-		Optional<Integer> entityOptional = jobRecruiterFODRepository.getAssignedJobsCount(userId);
+		List<Long> userIds = new ArrayList<>();
+		//		if (!isGetAll) {
+		userIds = userUtil.getUsersIdUnderManager();
+		//		}
+		Optional<Integer> entityOptional = jobRecruiterFODRepository.getAssignedJobsCount(userIds);
+//		Optional<Integer> entityOptional = jobRecruiterFODRepository.getAssignedJobsCount(userId);
 		try {
 			if (entityOptional.isPresent()) {
 				return entityOptional.get();

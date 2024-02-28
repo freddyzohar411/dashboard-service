@@ -9,13 +9,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.avensys.rts.dashboardservice.annotation.RequiresAllPermissions;
 import com.avensys.rts.dashboardservice.constant.MessageConstants;
@@ -62,6 +56,21 @@ public class DashboardController {
 			return ResponseUtil.generateSuccessResponse(null, HttpStatus.NOT_FOUND, e.getMessage());
 		}
 	}
+
+//	@RequiresAllPermissions({ Permission.JOB_READ })
+//	@GetMapping("/newjobs")
+//	public ResponseEntity<?> getNewJobsCount(
+//			@RequestParam(value = "isGetAll", required = false, defaultValue = "false") Boolean isGetAll,
+//			@RequestHeader(name = "Authorization") String token) {
+//		LOG.info("getNewJobsCount request received");
+//		try {
+//			Integer count = jobRecruiterFODService.getNewJobsCount();
+//			return ResponseUtil.generateSuccessResponse(count, HttpStatus.OK,
+//					messageSource.getMessage(MessageConstants.MESSAGE_SUCCESS, null, LocaleContextHolder.getLocale()));
+//		} catch (ServiceException e) {
+//			return ResponseUtil.generateSuccessResponse(null, HttpStatus.NOT_FOUND, e.getMessage());
+//		}
+//	}
 
 	@RequiresAllPermissions({ Permission.JOB_READ })
 	@GetMapping("/activejobs")
