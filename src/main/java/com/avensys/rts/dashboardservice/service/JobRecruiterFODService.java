@@ -32,17 +32,13 @@ public class JobRecruiterFODService {
 	 */
 	public Integer getNewJobsCount(Boolean isGetAll) throws ServiceException {
 		List<Long> userIds = new ArrayList<>();
-//		if (!isGetAll) {
 		userIds = userUtil.getUsersIdUnderManager();
-//		}
-//		Optional<Integer> entityOptional = jobRecruiterFODRepository.getNewJobsCount();
 		Optional<Integer> entityOptional = Optional.empty();
 		if (isGetAll) {
 			entityOptional = jobRecruiterFODRepository.getNewJobsCountAll();
 		} else {
 			entityOptional = jobRecruiterFODRepository.getNewJobsCount(userIds);
 		}
-//		Optional<Integer> entityOptional = jobRecruiterFODRepository.getNewJobsCount(userIds);
 		try {
 			if (entityOptional.isPresent()) {
 				return entityOptional.get();
@@ -56,9 +52,7 @@ public class JobRecruiterFODService {
 
 	public Integer getActiveJobsCount(Boolean isGetAll) throws ServiceException {
 		List<Long> userIds = new ArrayList<>();
-		// if (!isGetAll) {
 		userIds = userUtil.getUsersIdUnderManager();
-		// }
 		Optional<Integer> entityOptional = Optional.empty();
 		if (isGetAll) {
 			entityOptional = jobRecruiterFODRepository.getActiveJobsCountAll();
@@ -104,11 +98,8 @@ public class JobRecruiterFODService {
 
 	public Integer getAssignedJobsCount(Long userId) throws ServiceException {
 		List<Long> userIds = new ArrayList<>();
-		// if (!isGetAll) {
 		userIds = userUtil.getUsersIdUnderManager();
-		// }
 		Optional<Integer> entityOptional = jobRecruiterFODRepository.getAssignedJobsCount(userIds);
-//		Optional<Integer> entityOptional = jobRecruiterFODRepository.getAssignedJobsCount(userId);
 		try {
 			if (entityOptional.isPresent()) {
 				return entityOptional.get();
@@ -122,10 +113,7 @@ public class JobRecruiterFODService {
 
 	public Integer getFODCount(Long userId, Boolean isGetAll) throws ServiceException {
 		List<Long> userIds = new ArrayList<>();
-		// if (!isGetAll) {
 		userIds = userUtil.getUsersIdUnderManager();
-		// }
-//		Optional<Integer> entityOptional = jobRecruiterFODRepository.getFODCount(userId);
 		Optional<Integer> entityOptional = Optional.empty();
 		if (isGetAll) {
 			entityOptional = jobRecruiterFODRepository.getFODCountAll();

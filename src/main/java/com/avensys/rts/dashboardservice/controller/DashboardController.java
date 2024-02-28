@@ -44,19 +44,6 @@ public class DashboardController {
 	@Autowired
 	private MessageSource messageSource;
 
-//	@RequiresAllPermissions({ Permission.JOB_READ })
-//	@GetMapping("/newjobs")
-//	public ResponseEntity<?> getNewJobsCount(@RequestHeader(name = "Authorization") String token) {
-//		LOG.info("getNewJobsCount request received");
-//		try {
-//			Integer count = jobRecruiterFODService.getNewJobsCount();
-//			return ResponseUtil.generateSuccessResponse(count, HttpStatus.OK,
-//					messageSource.getMessage(MessageConstants.MESSAGE_SUCCESS, null, LocaleContextHolder.getLocale()));
-//		} catch (ServiceException e) {
-//			return ResponseUtil.generateSuccessResponse(null, HttpStatus.NOT_FOUND, e.getMessage());
-//		}
-//	}
-
 	@RequiresAllPermissions({ Permission.JOB_READ })
 	@GetMapping("/newjobs")
 	public ResponseEntity<?> getNewJobsCount(
@@ -71,19 +58,6 @@ public class DashboardController {
 			return ResponseUtil.generateSuccessResponse(null, HttpStatus.NOT_FOUND, e.getMessage());
 		}
 	}
-
-//	@RequiresAllPermissions({ Permission.JOB_READ })
-//	@GetMapping("/activejobs")
-//	public ResponseEntity<?> getActiveJobsCount(@RequestHeader(name = "Authorization") String token) {
-//		LOG.info("getActiveJobsCount request received");
-//		try {
-//			Integer count = jobRecruiterFODService.getActiveJobsCount();
-//			return ResponseUtil.generateSuccessResponse(count, HttpStatus.OK,
-//					messageSource.getMessage(MessageConstants.MESSAGE_SUCCESS, null, LocaleContextHolder.getLocale()));
-//		} catch (ServiceException e) {
-//			return ResponseUtil.generateSuccessResponse(null, HttpStatus.NOT_FOUND, e.getMessage());
-//		}
-//	}
 
 	@RequiresAllPermissions({ Permission.JOB_READ })
 	@GetMapping("/activejobs")
@@ -139,20 +113,6 @@ public class DashboardController {
 			return ResponseUtil.generateSuccessResponse(null, HttpStatus.NOT_FOUND, e.getMessage());
 		}
 	}
-
-//	@RequiresAllPermissions({ Permission.JOB_READ })
-//	@GetMapping("/fod")
-//	public ResponseEntity<?> getFODCount(@RequestHeader(name = "Authorization") String token) {
-//		LOG.info("getFODCount request received");
-//		try {
-//			Long userId = jwtUtil.getUserId(token);
-//			Integer count = jobRecruiterFODService.getFODCount(userId);
-//			return ResponseUtil.generateSuccessResponse(count, HttpStatus.OK,
-//					messageSource.getMessage(MessageConstants.MESSAGE_SUCCESS, null, LocaleContextHolder.getLocale()));
-//		} catch (ServiceException e) {
-//			return ResponseUtil.generateSuccessResponse(null, HttpStatus.NOT_FOUND, e.getMessage());
-//		}
-//	}
 
 	@RequiresAllPermissions({ Permission.JOB_READ })
 	@GetMapping("/fod")
