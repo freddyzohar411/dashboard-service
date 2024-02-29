@@ -9,13 +9,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.avensys.rts.dashboardservice.annotation.RequiresAllPermissions;
 import com.avensys.rts.dashboardservice.constant.MessageConstants;
@@ -52,10 +46,12 @@ public class DashboardController {
 
 	@RequiresAllPermissions({ Permission.JOB_READ })
 	@GetMapping("/newjobs")
-	public ResponseEntity<?> getNewJobsCount(@RequestHeader(name = "Authorization") String token) {
+	public ResponseEntity<?> getNewJobsCount(
+			@RequestParam(value = "isGetAll", required = false, defaultValue = "false") Boolean isGetAll,
+			@RequestHeader(name = "Authorization") String token) {
 		LOG.info("getNewJobsCount request received");
 		try {
-			Integer count = jobRecruiterFODService.getNewJobsCount();
+			Integer count = jobRecruiterFODService.getNewJobsCount(isGetAll);
 			return ResponseUtil.generateSuccessResponse(count, HttpStatus.OK,
 					messageSource.getMessage(MessageConstants.MESSAGE_SUCCESS, null, LocaleContextHolder.getLocale()));
 		} catch (ServiceException e) {
@@ -65,10 +61,12 @@ public class DashboardController {
 
 	@RequiresAllPermissions({ Permission.JOB_READ })
 	@GetMapping("/activejobs")
-	public ResponseEntity<?> getActiveJobsCount(@RequestHeader(name = "Authorization") String token) {
+	public ResponseEntity<?> getActiveJobsCount(
+			@RequestParam(value = "isGetAll", required = false, defaultValue = "false") Boolean isGetAll,
+			@RequestHeader(name = "Authorization") String token) {
 		LOG.info("getActiveJobsCount request received");
 		try {
-			Integer count = jobRecruiterFODService.getActiveJobsCount();
+			Integer count = jobRecruiterFODService.getActiveJobsCount(isGetAll);
 			return ResponseUtil.generateSuccessResponse(count, HttpStatus.OK,
 					messageSource.getMessage(MessageConstants.MESSAGE_SUCCESS, null, LocaleContextHolder.getLocale()));
 		} catch (ServiceException e) {
@@ -118,11 +116,13 @@ public class DashboardController {
 
 	@RequiresAllPermissions({ Permission.JOB_READ })
 	@GetMapping("/fod")
-	public ResponseEntity<?> getFODCount(@RequestHeader(name = "Authorization") String token) {
+	public ResponseEntity<?> getFODCount(
+			@RequestParam(value = "isGetAll", required = false, defaultValue = "false") Boolean isGetAll,
+			@RequestHeader(name = "Authorization") String token) {
 		LOG.info("getFODCount request received");
 		try {
 			Long userId = jwtUtil.getUserId(token);
-			Integer count = jobRecruiterFODService.getFODCount(userId);
+			Integer count = jobRecruiterFODService.getFODCount(userId, isGetAll);
 			return ResponseUtil.generateSuccessResponse(count, HttpStatus.OK,
 					messageSource.getMessage(MessageConstants.MESSAGE_SUCCESS, null, LocaleContextHolder.getLocale()));
 		} catch (ServiceException e) {
