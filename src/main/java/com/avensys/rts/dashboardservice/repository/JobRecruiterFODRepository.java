@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import com.avensys.rts.dashboardservice.entity.JobRecruiterFODEntity;
 
 public interface JobRecruiterFODRepository extends JpaRepository<JobRecruiterFODEntity, Long> {
-	
+
 	// Add filter only in list of user Id
 	@Query(value = "select count(id) from job where id not in (select distinct(fod.job_id) from job_recruiter_fod fod) and is_active = true and is_deleted = false and created_by IN :userIds", nativeQuery = true)
 	Optional<Integer> getNewJobsCount(List<Long> userIds);
