@@ -18,7 +18,6 @@ import com.avensys.rts.dashboardservice.constant.MessageConstants;
 import com.avensys.rts.dashboardservice.enums.Permission;
 import com.avensys.rts.dashboardservice.exception.ServiceException;
 import com.avensys.rts.dashboardservice.service.JobRecruiterFODService;
-import com.avensys.rts.dashboardservice.util.JwtUtil;
 import com.avensys.rts.dashboardservice.util.ResponseUtil;
 import com.avensys.rts.dashboardservice.util.UserUtil;
 
@@ -35,9 +34,6 @@ public class DashboardController {
 
 	@Autowired
 	private JobRecruiterFODService jobRecruiterFODService;
-
-	@Autowired
-	private JwtUtil jwtUtil;
 
 	@Autowired
 	private UserUtil userUtil;
@@ -78,7 +74,8 @@ public class DashboardController {
 	public ResponseEntity<?> getInactiveJobsCount(@RequestHeader(name = "Authorization") String token) {
 		LOG.info("getInactiveJobsCount request received");
 		try {
-			Integer count = jobRecruiterFODService.getInactiveJobsCount();
+			Boolean getAll = userUtil.checkIsAdmin();
+			Integer count = jobRecruiterFODService.getInactiveJobsCount(getAll);
 			return ResponseUtil.generateSuccessResponse(count, HttpStatus.OK,
 					messageSource.getMessage(MessageConstants.MESSAGE_SUCCESS, null, LocaleContextHolder.getLocale()));
 		} catch (ServiceException e) {
@@ -91,7 +88,8 @@ public class DashboardController {
 	public ResponseEntity<?> getClosedJobsCount(@RequestHeader(name = "Authorization") String token) {
 		LOG.info("getClosedJobsCount request received");
 		try {
-			Integer count = jobRecruiterFODService.getClosedJobsCount();
+			Boolean getAll = userUtil.checkIsAdmin();
+			Integer count = jobRecruiterFODService.getClosedJobsCount(getAll);
 			return ResponseUtil.generateSuccessResponse(count, HttpStatus.OK,
 					messageSource.getMessage(MessageConstants.MESSAGE_SUCCESS, null, LocaleContextHolder.getLocale()));
 		} catch (ServiceException e) {
@@ -104,8 +102,8 @@ public class DashboardController {
 	public ResponseEntity<?> getAssignedJobsCount(@RequestHeader(name = "Authorization") String token) {
 		LOG.info("getAssignedJobsCount request received");
 		try {
-			Long userId = jwtUtil.getUserId(token);
-			Integer count = jobRecruiterFODService.getAssignedJobsCount(userId);
+			Boolean getAll = userUtil.checkIsAdmin();
+			Integer count = jobRecruiterFODService.getAssignedJobsCount(getAll);
 			return ResponseUtil.generateSuccessResponse(count, HttpStatus.OK,
 					messageSource.getMessage(MessageConstants.MESSAGE_SUCCESS, null, LocaleContextHolder.getLocale()));
 		} catch (ServiceException e) {
@@ -119,8 +117,7 @@ public class DashboardController {
 		LOG.info("getFODCount request received");
 		try {
 			Boolean getAll = userUtil.checkIsAdmin();
-			Long userId = jwtUtil.getUserId(token);
-			Integer count = jobRecruiterFODService.getFODCount(userId, getAll);
+			Integer count = jobRecruiterFODService.getFODCount(getAll);
 			return ResponseUtil.generateSuccessResponse(count, HttpStatus.OK,
 					messageSource.getMessage(MessageConstants.MESSAGE_SUCCESS, null, LocaleContextHolder.getLocale()));
 		} catch (ServiceException e) {
@@ -134,32 +131,6 @@ public class DashboardController {
 		LOG.info("getAllJobsCount request received");
 		try {
 			Integer count = jobRecruiterFODService.getAllJobsCount();
-			return ResponseUtil.generateSuccessResponse(count, HttpStatus.OK,
-					messageSource.getMessage(MessageConstants.MESSAGE_SUCCESS, null, LocaleContextHolder.getLocale()));
-		} catch (ServiceException e) {
-			return ResponseUtil.generateSuccessResponse(null, HttpStatus.NOT_FOUND, e.getMessage());
-		}
-	}
-
-	@RequiresAllPermissions({ Permission.JOB_READ })
-	@GetMapping("/totalassignedjobs")
-	public ResponseEntity<?> getTotalAssignedJobsCount(@RequestHeader(name = "Authorization") String token) {
-		LOG.info("getTotalAssignedJobsCount request received");
-		try {
-			Integer count = jobRecruiterFODService.getTotalAssignedJobsCount();
-			return ResponseUtil.generateSuccessResponse(count, HttpStatus.OK,
-					messageSource.getMessage(MessageConstants.MESSAGE_SUCCESS, null, LocaleContextHolder.getLocale()));
-		} catch (ServiceException e) {
-			return ResponseUtil.generateSuccessResponse(null, HttpStatus.NOT_FOUND, e.getMessage());
-		}
-	}
-
-	@RequiresAllPermissions({ Permission.JOB_READ })
-	@GetMapping("/totalfodjobs")
-	public ResponseEntity<?> getTotalFODJobsCount(@RequestHeader(name = "Authorization") String token) {
-		LOG.info("getTotalFODJobsCount request received");
-		try {
-			Integer count = jobRecruiterFODService.getTotalFODJobsCount();
 			return ResponseUtil.generateSuccessResponse(count, HttpStatus.OK,
 					messageSource.getMessage(MessageConstants.MESSAGE_SUCCESS, null, LocaleContextHolder.getLocale()));
 		} catch (ServiceException e) {
