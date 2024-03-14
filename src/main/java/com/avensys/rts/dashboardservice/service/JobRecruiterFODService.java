@@ -150,9 +150,16 @@ public class JobRecruiterFODService {
 		}
 	}
 
-	public Integer getAllJobsCount() throws ServiceException {
+	public Integer getAllJobsCount(Boolean getAll) throws ServiceException {
 		try {
-			Optional<Integer> entityOptional = jobRecruiterFODRepository.getAllJobsCount();
+			List<Long> userIds = new ArrayList<>();
+			userIds = userUtil.getUsersIdUnderManager();
+			Optional<Integer> entityOptional = Optional.empty();
+			if (getAll) {
+				entityOptional = jobRecruiterFODRepository.getAllJobsCountAll();
+			} else {
+				entityOptional = jobRecruiterFODRepository.getAllJobsCount(userIds);
+			}
 			if (entityOptional.isPresent()) {
 				return entityOptional.get();
 			} else {

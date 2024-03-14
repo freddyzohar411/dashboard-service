@@ -130,7 +130,8 @@ public class DashboardController {
 	public ResponseEntity<?> getAllJobsCount(@RequestHeader(name = "Authorization") String token) {
 		LOG.info("getAllJobsCount request received");
 		try {
-			Integer count = jobRecruiterFODService.getAllJobsCount();
+			Boolean getAll = userUtil.checkIsAdmin();
+			Integer count = jobRecruiterFODService.getAllJobsCount(getAll);
 			return ResponseUtil.generateSuccessResponse(count, HttpStatus.OK,
 					messageSource.getMessage(MessageConstants.MESSAGE_SUCCESS, null, LocaleContextHolder.getLocale()));
 		} catch (ServiceException e) {
