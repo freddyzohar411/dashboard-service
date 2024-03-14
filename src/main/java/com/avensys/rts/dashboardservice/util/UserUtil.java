@@ -1,7 +1,11 @@
 package com.avensys.rts.dashboardservice.util;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.StringJoiner;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,9 +23,6 @@ public class UserUtil {
 	@Autowired
 	private UserAPIClient userAPIClient;
 
-	@Autowired
-	private JwtUtil jwtUtil;
-
 	public Set<Long> getUserGroupIds(UserDetailsResponseDTO userDetailsResponse) {
 		return mapUserDetailsToUserGroupIds(userDetailsResponse);
 	}
@@ -33,12 +34,7 @@ public class UserUtil {
 
 	public List<Long> getUsersIdUnderManager() {
 		HttpResponse response = userAPIClient.getUsersUnderManager();
-
-		List<Integer> integerList = (List<Integer>) response.getData();
-
-		return integerList.stream()
-				.map(Long::valueOf)
-				.collect(Collectors.toList());
+		return (List<Long>) response.getData();
 	}
 
 	public String getUserGroupIdsAsString() {
@@ -61,6 +57,7 @@ public class UserUtil {
 
 	/**
 	 * Map the user details to a map of module and permissions
+	 * 
 	 * @param userDetailsResponse
 	 * @return
 	 */
@@ -88,11 +85,13 @@ public class UserUtil {
 
 	/**
 	 * Check if the user has any of the permissions specified in the annotation
+	 * 
 	 * @param modulePermissions
 	 * @param requiredPermissions
 	 * @return
 	 */
-	public Boolean checkAPermissionWithModule (Map<String, Set<String>> modulePermissions, String module, String permission) {
+	public Boolean checkAPermissionWithModule(Map<String, Set<String>> modulePermissions, String module,
+			String permission) {
 		if (modulePermissions.containsKey(module)) {
 			Set<String> permissions = modulePermissions.get(module);
 			if (permissions.contains(permission)) {
@@ -109,7 +108,8 @@ public class UserUtil {
 	 * @param requiredPermissions
 	 * @return
 	 */
-	public Boolean checkAllPermissionWithModule (Map<String, Set<String>> modulePermissions, String module, List<String> requiredPermissions) {
+	public Boolean checkAllPermissionWithModule(Map<String, Set<String>> modulePermissions, String module,
+			List<String> requiredPermissions) {
 		if (modulePermissions.containsKey(module)) {
 			Set<String> permissions = modulePermissions.get(module);
 			if (permissions.containsAll(requiredPermissions)) {
@@ -136,12 +136,33 @@ public class UserUtil {
 
 	public UserDetailsResponseDTO getUserDetails() {
 		HttpResponse userResponse = userAPIClient.getUserDetail();
-		UserDetailsResponseDTO userData = MappingUtil.mapClientBodyToClass(userResponse.getData(), UserDetailsResponseDTO.class);
+		UserDetailsResponseDTO userData = MappingUtil.mapClientBodyToClass(userResponse.getData(),
+				UserDetailsResponseDTO.class);
 		return userData;
+	}
+
+	public Boolean checkIsAdmin() {
+		Boolean flag = false;
+		HttpResponse userResponse = userAPIClient.getUserDetail();
+		UserDetailsResponseDTO userData = MappingUtil.mapClientBodyToClass(userResponse.getData(),
+				UserDetailsResponseDTO.class);
+		if (userData.getUserGroup() != null && userData.getUserGroup().size() > 0) {
+			for (UserGroupResponseDTO grp : userData.getUserGroup()) {
+				if (grp.getRoles() != null && grp.getRoles().size() > 0) {
+					for (RoleResponseDTO role : grp.getRoles()) {
+						if (role.getRoleName().toLowerCase().contains("admin")) {
+							flag = true;
+						}
+					}
+				}
+			}
+		}
+		return flag;
 	}
 
 	/**
 	 * Get module permission
+	 * 
 	 * @return
 	 */
 	public Map<String, Set<String>> getModulePermissions() {
@@ -176,6 +197,5 @@ public class UserUtil {
 
 		return userGroupIds;
 	}
-
 
 }

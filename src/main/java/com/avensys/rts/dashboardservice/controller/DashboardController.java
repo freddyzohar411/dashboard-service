@@ -1,7 +1,5 @@
 package com.avensys.rts.dashboardservice.controller;
 
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,17 +7,20 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.avensys.rts.dashboardservice.annotation.RequiresAllPermissions;
 import com.avensys.rts.dashboardservice.constant.MessageConstants;
 import com.avensys.rts.dashboardservice.enums.Permission;
 import com.avensys.rts.dashboardservice.exception.ServiceException;
-import com.avensys.rts.dashboardservice.payload.JobListingRequestDTO;
 import com.avensys.rts.dashboardservice.service.JobRecruiterFODService;
-import com.avensys.rts.dashboardservice.service.JobService;
 import com.avensys.rts.dashboardservice.util.JwtUtil;
 import com.avensys.rts.dashboardservice.util.ResponseUtil;
+import com.avensys.rts.dashboardservice.util.UserUtil;
 
 /**
  * @author Rahul Sahu This class used to perform all the dashboard operations
@@ -36,22 +37,21 @@ public class DashboardController {
 	private JobRecruiterFODService jobRecruiterFODService;
 
 	@Autowired
-	private JobService jobService;
+	private JwtUtil jwtUtil;
 
 	@Autowired
-	private JwtUtil jwtUtil;
+	private UserUtil userUtil;
 
 	@Autowired
 	private MessageSource messageSource;
 
 	@RequiresAllPermissions({ Permission.JOB_READ })
 	@GetMapping("/newjobs")
-	public ResponseEntity<?> getNewJobsCount(
-			@RequestParam(value = "isGetAll", required = false, defaultValue = "false") Boolean isGetAll,
-			@RequestHeader(name = "Authorization") String token) {
+	public ResponseEntity<?> getNewJobsCount(@RequestHeader(name = "Authorization") String token) {
 		LOG.info("getNewJobsCount request received");
 		try {
-			Integer count = jobRecruiterFODService.getNewJobsCount(isGetAll);
+			Boolean getAll = userUtil.checkIsAdmin();
+			Integer count = jobRecruiterFODService.getNewJobsCount(getAll);
 			return ResponseUtil.generateSuccessResponse(count, HttpStatus.OK,
 					messageSource.getMessage(MessageConstants.MESSAGE_SUCCESS, null, LocaleContextHolder.getLocale()));
 		} catch (ServiceException e) {
@@ -61,12 +61,11 @@ public class DashboardController {
 
 	@RequiresAllPermissions({ Permission.JOB_READ })
 	@GetMapping("/activejobs")
-	public ResponseEntity<?> getActiveJobsCount(
-			@RequestParam(value = "isGetAll", required = false, defaultValue = "false") Boolean isGetAll,
-			@RequestHeader(name = "Authorization") String token) {
+	public ResponseEntity<?> getActiveJobsCount(@RequestHeader(name = "Authorization") String token) {
 		LOG.info("getActiveJobsCount request received");
 		try {
-			Integer count = jobRecruiterFODService.getActiveJobsCount(isGetAll);
+			Boolean getAll = userUtil.checkIsAdmin();
+			Integer count = jobRecruiterFODService.getActiveJobsCount(getAll);
 			return ResponseUtil.generateSuccessResponse(count, HttpStatus.OK,
 					messageSource.getMessage(MessageConstants.MESSAGE_SUCCESS, null, LocaleContextHolder.getLocale()));
 		} catch (ServiceException e) {
@@ -116,13 +115,12 @@ public class DashboardController {
 
 	@RequiresAllPermissions({ Permission.JOB_READ })
 	@GetMapping("/fod")
-	public ResponseEntity<?> getFODCount(
-			@RequestParam(value = "isGetAll", required = false, defaultValue = "false") Boolean isGetAll,
-			@RequestHeader(name = "Authorization") String token) {
+	public ResponseEntity<?> getFODCount(@RequestHeader(name = "Authorization") String token) {
 		LOG.info("getFODCount request received");
 		try {
+			Boolean getAll = userUtil.checkIsAdmin();
 			Long userId = jwtUtil.getUserId(token);
-			Integer count = jobRecruiterFODService.getFODCount(userId, isGetAll);
+			Integer count = jobRecruiterFODService.getFODCount(userId, getAll);
 			return ResponseUtil.generateSuccessResponse(count, HttpStatus.OK,
 					messageSource.getMessage(MessageConstants.MESSAGE_SUCCESS, null, LocaleContextHolder.getLocale()));
 		} catch (ServiceException e) {
@@ -169,26 +167,4 @@ public class DashboardController {
 		}
 	}
 
-	@PostMapping("/jobfod/listing")
-	public ResponseEntity<Object> getAccountListing(@RequestBody JobListingRequestDTO jobListingRequestDTO,
-			@RequestHeader(name = "Authorization") String token) {
-		Long userId = jwtUtil.getUserId(token);
-		Integer page = jobListingRequestDTO.getPage();
-		Integer pageSize = jobListingRequestDTO.getPageSize();
-		String sortBy = jobListingRequestDTO.getSortBy();
-		String sortDirection = jobListingRequestDTO.getSortDirection();
-		String searchTerm = jobListingRequestDTO.getSearchTerm();
-		List<String> searchFields = jobListingRequestDTO.getSearchFields();
-		if (searchTerm == null || searchTerm.isEmpty()) {
-			return ResponseUtil.generateSuccessResponse(
-					jobService.getJobListingPage(page, pageSize, sortBy, sortDirection, userId), HttpStatus.OK,
-					messageSource.getMessage(MessageConstants.MESSAGE_SUCCESS, null, LocaleContextHolder.getLocale()));
-		} else {
-			return ResponseUtil.generateSuccessResponse(
-					jobService.getJobListingPageWithSearch(page, pageSize, sortBy, sortDirection, searchTerm,
-							searchFields, userId),
-					HttpStatus.OK,
-					messageSource.getMessage(MessageConstants.MESSAGE_SUCCESS, null, LocaleContextHolder.getLocale()));
-		}
-	}
 }

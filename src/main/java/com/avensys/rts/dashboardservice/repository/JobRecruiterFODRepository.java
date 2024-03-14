@@ -11,10 +11,10 @@ import com.avensys.rts.dashboardservice.entity.JobRecruiterFODEntity;
 public interface JobRecruiterFODRepository extends JpaRepository<JobRecruiterFODEntity, Long> {
 
 	// Add filter only in list of user Id
-	@Query(value = "select count(id) from job where id not in (select distinct(fod.job_id) from job_recruiter_fod fod) and is_active = true and is_deleted = false and created_by IN :userIds", nativeQuery = true)
+	@Query(value = "select count(id) from job where id not in (select distinct(fod.job_id) from job_recruiter_fod fod) and is_active = true and is_deleted = false and created_by IN :userIds and CAST(NULLIF(job_submission_data->>'jobStatus', '') as TEXT) = 'Active'", nativeQuery = true)
 	Optional<Integer> getNewJobsCount(List<Long> userIds);
 
-	@Query(value = "select count(id) from job where id not in (select distinct(fod.job_id) from job_recruiter_fod fod) and is_active = true and is_deleted = false", nativeQuery = true)
+	@Query(value = "select count(id) from job where id not in (select distinct(fod.job_id) from job_recruiter_fod fod) and is_active = true and is_deleted = false and CAST(NULLIF(job_submission_data->>'jobStatus', '') as TEXT) = 'Active'", nativeQuery = true)
 	Optional<Integer> getNewJobsCountAll();
 
 	@Query(value = "select count(distinct(job_id)) from job_recruiter_fod where status != 'CLOSED' and (recruiter_id IN :userIds or sales_id IN :userIds)", nativeQuery = true)

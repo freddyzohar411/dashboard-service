@@ -31,15 +31,15 @@ public class JobRecruiterFODService {
 	 * @throws ServiceException
 	 */
 	public Integer getNewJobsCount(Boolean isGetAll) throws ServiceException {
-		List<Long> userIds = new ArrayList<>();
-		userIds = userUtil.getUsersIdUnderManager();
-		Optional<Integer> entityOptional = Optional.empty();
-		if (isGetAll) {
-			entityOptional = jobRecruiterFODRepository.getNewJobsCountAll();
-		} else {
-			entityOptional = jobRecruiterFODRepository.getNewJobsCount(userIds);
-		}
 		try {
+			List<Long> userIds = new ArrayList<>();
+			userIds = userUtil.getUsersIdUnderManager();
+			Optional<Integer> entityOptional = Optional.empty();
+			if (isGetAll) {
+				entityOptional = jobRecruiterFODRepository.getNewJobsCountAll();
+			} else {
+				entityOptional = jobRecruiterFODRepository.getNewJobsCount(userIds);
+			}
 			if (entityOptional.isPresent()) {
 				return entityOptional.get();
 			} else {
