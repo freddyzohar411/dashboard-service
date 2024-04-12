@@ -41,10 +41,10 @@ public interface JobRecruiterFODRepository extends JpaRepository<JobRecruiterFOD
 	@Query(value = "select count(id) from job where is_active = true and is_deleted = false and  id in (select distinct(fod.job_id) from job_recruiter_fod fod) and CAST(NULLIF(job_submission_data->>'jobStatus', '') as TEXT) = 'Active'", nativeQuery = true)
 	Optional<Integer> getAssignedJobsCountAll();
 
-	@Query(value = "select count(id) from job where is_active = true and is_deleted = false and id in (select distinct(fod.job_id) from job_recruiter_fod fod where (fod.recruiter_id IN :userIds or fod.sales_id IN :userIds) and fod.created_at >= current_date) and CAST(NULLIF(job_submission_data->>'jobStatus', '') as TEXT) = 'Active'", nativeQuery = true)
+	@Query(value = "select count(id) from job where is_active = true and is_deleted = false and id in (select distinct(fod.job_id) from job_recruiter_fod fod where (fod.recruiter_id IN :userIds or fod.sales_id IN :userIds) and fod.updated_at >= current_date) and CAST(NULLIF(job_submission_data->>'jobStatus', '') as TEXT) = 'Active'", nativeQuery = true)
 	Optional<Integer> getFODCount(List<Long> userIds);
 
-	@Query(value = "select count(id) from job where is_active = true and is_deleted = false and id in (select distinct(fod.job_id) from job_recruiter_fod fod where fod.created_at >= current_date) and CAST(NULLIF(job_submission_data->>'jobStatus', '') as TEXT) = 'Active'", nativeQuery = true)
+	@Query(value = "select count(id) from job where is_active = true and is_deleted = false and id in (select distinct(fod.job_id) from job_recruiter_fod fod where fod.updated_at >= current_date) and CAST(NULLIF(job_submission_data->>'jobStatus', '') as TEXT) = 'Active'", nativeQuery = true)
 	Optional<Integer> getFODCountAll();
 
 	@Query(value = "select count(id) from job where is_active = true and is_deleted = false and (created_by IN :userIds or CAST(NULLIF(job_submission_data->>'accountOwnerId', '') as INTEGER) in :userIds or id in (select distinct(fod.job_id) from job_recruiter_fod fod where (fod.recruiter_id IN :userIds or fod.sales_id IN :userIds)))", nativeQuery = true)
