@@ -60,7 +60,7 @@ public class DashboardController {
 	public ResponseEntity<?> getActiveJobsCount(@RequestHeader(name = "Authorization") String token) {
 		LOG.info("getActiveJobsCount request received");
 		try {
-			Boolean getAll = userUtil.checkIsAdmin();
+			Boolean getAll = true;
 			Integer count = jobRecruiterFODService.getActiveJobsCount(getAll);
 			return ResponseUtil.generateSuccessResponse(count, HttpStatus.OK,
 					messageSource.getMessage(MessageConstants.MESSAGE_SUCCESS, null, LocaleContextHolder.getLocale()));
