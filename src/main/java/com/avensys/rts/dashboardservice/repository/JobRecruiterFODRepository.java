@@ -17,8 +17,8 @@ public interface JobRecruiterFODRepository extends JpaRepository<JobRecruiterFOD
 	@Query(value = "select count(id) from job where id not in (select distinct(fod.job_id) from job_recruiter_fod fod) and is_active = true and is_deleted = false and CAST(NULLIF(job_submission_data->>'jobStatus', '') as TEXT) = 'Active'", nativeQuery = true)
 	Optional<Integer> getNewJobsCountAll();
 
-	@Query(value = "select count(id) from job where is_active = true and is_deleted = false and (created_by IN :userIds or CAST(NULLIF(job_submission_data->>'accountOwnerId', '') as INTEGER) in :userIds or id in (select distinct(fod.job_id) from job_recruiter_fod fod where (fod.recruiter_id IN :userIds or fod.sales_id IN :userIds))) and CAST(NULLIF(job_submission_data->>'jobStatus', '') as TEXT) = 'Active'", nativeQuery = true)
-	Optional<Integer> getActiveJobsCount(List<Long> userIds);
+	@Query(value = "select count(id) from job where is_active = true and is_deleted = false and id not in (select distinct(fod.job_id) from job_recruiter_fod fod where (fod.recruiter_id IN (30))) and CAST(NULLIF(job_submission_data->>'jobStatus', '') as TEXT) = 'Active'", nativeQuery = true)
+	Optional<Integer> getActiveJobsCount(Long userId);
 
 	@Query(value = "select count(id) from job where is_active = true and is_deleted = false and CAST(NULLIF(job_submission_data->>'jobStatus', '') as TEXT) = 'Active'", nativeQuery = true)
 	Optional<Integer> getActiveJobsCountAll();

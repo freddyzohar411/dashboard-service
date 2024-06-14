@@ -18,6 +18,7 @@ import com.avensys.rts.dashboardservice.constant.MessageConstants;
 import com.avensys.rts.dashboardservice.enums.Permission;
 import com.avensys.rts.dashboardservice.exception.ServiceException;
 import com.avensys.rts.dashboardservice.service.JobRecruiterFODService;
+import com.avensys.rts.dashboardservice.util.JwtUtil;
 import com.avensys.rts.dashboardservice.util.ResponseUtil;
 import com.avensys.rts.dashboardservice.util.UserUtil;
 
@@ -41,6 +42,9 @@ public class DashboardController {
 	@Autowired
 	private MessageSource messageSource;
 
+	@Autowired
+	private JwtUtil jwtUtil;
+
 	@RequiresAllPermissions({ Permission.JOB_READ })
 	@GetMapping("/newjobs")
 	public ResponseEntity<?> getNewJobsCount(@RequestHeader(name = "Authorization") String token) {
@@ -60,8 +64,9 @@ public class DashboardController {
 	public ResponseEntity<?> getActiveJobsCount(@RequestHeader(name = "Authorization") String token) {
 		LOG.info("getActiveJobsCount request received");
 		try {
-			Boolean getAll = true;
-			Integer count = jobRecruiterFODService.getActiveJobsCount(getAll);
+			Long userId = jwtUtil.getUserId(token);
+			Boolean getAll = userUtil.checkIsAdmin();
+			Integer count = jobRecruiterFODService.getActiveJobsCount(getAll, userId);
 			return ResponseUtil.generateSuccessResponse(count, HttpStatus.OK,
 					messageSource.getMessage(MessageConstants.MESSAGE_SUCCESS, null, LocaleContextHolder.getLocale()));
 		} catch (ServiceException e) {
