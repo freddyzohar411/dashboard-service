@@ -107,8 +107,9 @@ public class DashboardController {
 	public ResponseEntity<?> getAssignedJobsCount(@RequestHeader(name = "Authorization") String token) {
 		LOG.info("getAssignedJobsCount request received");
 		try {
+			Long userId = jwtUtil.getUserId(token);
 			Boolean getAll = userUtil.checkIsAdmin();
-			Integer count = jobRecruiterFODService.getAssignedJobsCount(getAll);
+			Integer count = jobRecruiterFODService.getAssignedJobsCount(getAll, userId);
 			return ResponseUtil.generateSuccessResponse(count, HttpStatus.OK,
 					messageSource.getMessage(MessageConstants.MESSAGE_SUCCESS, null, LocaleContextHolder.getLocale()));
 		} catch (ServiceException e) {
