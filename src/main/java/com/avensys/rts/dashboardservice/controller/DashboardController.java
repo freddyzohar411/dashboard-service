@@ -1,5 +1,7 @@
 package com.avensys.rts.dashboardservice.controller;
 
+import java.util.HashMap;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,7 +97,19 @@ public class DashboardController {
 		try {
 			Boolean getAll = userUtil.checkIsAdmin();
 			Integer count = jobRecruiterFODService.getClosedJobsCount(getAll);
-			return ResponseUtil.generateSuccessResponse(count, HttpStatus.OK,
+			Integer lostCount = jobRecruiterFODService.getClosedLostJobsCount(getAll);
+			Integer winCount = count;
+
+			if (lostCount > 0 && (count - lostCount) > 0) {
+				winCount = count - lostCount;
+			}
+
+			HashMap<String, Integer> counts = new HashMap<String, Integer>();
+			counts.put("total", count);
+			counts.put("closedLost", lostCount);
+			counts.put("closedWin", winCount);
+
+			return ResponseUtil.generateSuccessResponse(counts, HttpStatus.OK,
 					messageSource.getMessage(MessageConstants.MESSAGE_SUCCESS, null, LocaleContextHolder.getLocale()));
 		} catch (ServiceException e) {
 			return ResponseUtil.generateSuccessResponse(null, HttpStatus.NOT_FOUND, e.getMessage());

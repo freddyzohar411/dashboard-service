@@ -108,6 +108,26 @@ public class JobRecruiterFODService {
 		}
 	}
 
+	public Integer getClosedLostJobsCount(Boolean getAll) throws ServiceException {
+		try {
+			List<Long> userIds = new ArrayList<>();
+			userIds = userUtil.getUsersIdUnderManager();
+			Optional<Integer> entityOptional = Optional.empty();
+			if (getAll) {
+				entityOptional = jobRecruiterFODRepository.getClosedLostJobsCountAll();
+			} else {
+				entityOptional = jobRecruiterFODRepository.getClosedLostJobsCount(userIds);
+			}
+			if (entityOptional.isPresent()) {
+				return entityOptional.get();
+			} else {
+				return 0;
+			}
+		} catch (Exception e) {
+			throw new ServiceException(e.getLocalizedMessage());
+		}
+	}
+
 	public Integer getAssignedJobsCount(Boolean getAll, Long userId) throws ServiceException {
 		try {
 			List<Long> userIds = new ArrayList<>();
