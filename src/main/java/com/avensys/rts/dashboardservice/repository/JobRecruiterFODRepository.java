@@ -41,11 +41,11 @@ public interface JobRecruiterFODRepository extends JpaRepository<JobRecruiterFOD
 	@Query(value = "select count(id) from job where is_active = true and is_deleted = false and CAST(NULLIF(job_submission_data->>'jobStatus', '') as TEXT) = 'Closedlost'", nativeQuery = true)
 	Optional<Integer> getClosedLostJobsCountAll();
 
-	@Query(value = "select count(id) from job where is_active = true and is_deleted = false and id in (select distinct(fod.job_id) from job_recruiter_fod fod where (fod.recruiter_id IN :userIds or fod.sales_id IN :userIds)) and CAST(NULLIF(job_submission_data->>'jobStatus', '') as TEXT) = 'Active'", nativeQuery = true)
-	Optional<Integer> getAssignedJobsCount(List<Long> userIds);
-
 	@Query(value = "select count(id) from job where is_active = true and is_deleted = false and id in (select distinct(fod.job_id) from job_recruiter_fod fod where fod.recruiter_id IN (?1)) and CAST(NULLIF(job_submission_data->>'jobStatus', '') as TEXT) = 'Active'", nativeQuery = true)
-	Optional<Integer> getAssignedJobsCountAll(Long userId);
+	Optional<Integer> getAssignedJobsCount(Long userId);
+
+	@Query(value = "select count(id) from job where is_active = true and is_deleted = false and  id in (select distinct(fod.job_id) from job_recruiter_fod fod) and CAST(NULLIF(job_submission_data->>'jobStatus', '') as TEXT) = 'Active'", nativeQuery = true)
+	Optional<Integer> getAssignedJobsCountAll();
 
 	@Query(value = "select count(id) from job where is_active = true and is_deleted = false and id in (select distinct(fod.job_id) from job_recruiter_fod fod where (fod.recruiter_id IN :userIds or fod.sales_id IN :userIds) and fod.updated_at >= current_date) and CAST(NULLIF(job_submission_data->>'jobStatus', '') as TEXT) = 'Active'", nativeQuery = true)
 	Optional<Integer> getFODCount(List<Long> userIds);

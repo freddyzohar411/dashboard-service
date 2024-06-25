@@ -67,7 +67,7 @@ public class DashboardController {
 		LOG.info("getActiveJobsCount request received");
 		try {
 			Long userId = jwtUtil.getUserId(token);
-			Boolean getAll = userUtil.checkIsAdmin();
+			Boolean getAll = true;
 			Integer count = jobRecruiterFODService.getActiveJobsCount(getAll, userId);
 			return ResponseUtil.generateSuccessResponse(count, HttpStatus.OK,
 					messageSource.getMessage(MessageConstants.MESSAGE_SUCCESS, null, LocaleContextHolder.getLocale()));
