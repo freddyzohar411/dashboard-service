@@ -100,7 +100,9 @@ public class DashboardController {
 			Integer lostCount = jobRecruiterFODService.getClosedLostJobsCount(getAll);
 			Integer winCount = count;
 
-			if (lostCount > 0 && (count - lostCount) > 0) {
+			if (count == lostCount) {
+				winCount = 0;
+			} else if (lostCount > 0 && (count - lostCount) > 0) {
 				winCount = count - lostCount;
 			}
 
@@ -111,7 +113,7 @@ public class DashboardController {
 
 			return ResponseUtil.generateSuccessResponse(counts, HttpStatus.OK,
 					messageSource.getMessage(MessageConstants.MESSAGE_SUCCESS, null, LocaleContextHolder.getLocale()));
-		} catch (ServiceException e) {
+		} catch (Exception e) {
 			return ResponseUtil.generateSuccessResponse(null, HttpStatus.NOT_FOUND, e.getMessage());
 		}
 	}
